@@ -149,10 +149,13 @@ script:
              JULIA="/tmp/julia/bin/julia" \
              BIN=/tmp/embedding-test \
              "$(cd julia2 && make print-CC)"
+    # run the doctests on Linux 64-bit
+    - if [ `uname` = "Linux" ] && [ $ARCH = "x86_64" ]; then
+        make -C doc doctest=true; fi
     # restore initial state and prepare for travis caching
     - mv julia2 julia &&
         rm -f julia/deps/scratch/libgit2-*/CMakeFiles/CMakeOutput.log
 # uncomment the following if failures are suspected to be due to the out-of-memory killer
 #    - dmesg
-    # build the docs and run the doctests
+-after_success:
     - cd julia && make -C doc deploy
