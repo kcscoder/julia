@@ -53,6 +53,7 @@
  *
  * TODO: save/restore floating point control state
  * and reset avx state
+ * and update fs:[0xEOC] to contain the address of the stack
  */
 
 #define CNAME jl_setjmp
@@ -67,7 +68,7 @@
     mov    DWORD PTR [eax+20],edx // eip
     mov    edx,DWORD PTR fs:[0] // seh registration
     mov    DWORD PTR [eax+24],edx
-    xor    eax,eax
+    xor    eax,eax # return 0
     ret
 #include "END.h"
 
@@ -137,6 +138,8 @@ a:  ret    // jmp ecx
     mov    DWORD PTR fs:[0],ebp
     mov    ebp,DWORD PTR [eax+0]
     mov    DWORD PTR [esp],ecx
+    xor    eax,eax # return 0
+    inc    eax # HACK: return 1
     ret
 #include "END.h"
 

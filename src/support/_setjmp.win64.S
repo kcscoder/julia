@@ -3,12 +3,13 @@
 /*
  * TODO: save/restore floating point control state
  * and reset avx state
+ * and update gs:[0x1478] to contain the address of the stack
  */
 
 #define CNAME jl_setjmp
 #include "ENTRY.amd64.h"
     mov    rdx,QWORD PTR [rsp] // rta
-    mov    QWORD PTR gs:[0],rax // SEH
+    mov    rax,QWORD PTR gs:[0] // SEH
     mov    QWORD PTR [rcx+0],rax
     mov    QWORD PTR [rcx+8],rbx
     mov    QWORD PTR [rcx+16],rsp
@@ -31,7 +32,7 @@
     movaps XMMWORD PTR [rcx+208],xmm13
     movaps XMMWORD PTR [rcx+224],xmm14
     movaps XMMWORD PTR [rcx+240],xmm15
-    xor    rax,rax
+    xor    rax,rax # return 0
     ret
 #include "END.h"
 
@@ -59,7 +60,7 @@
     movaps xmm13,XMMWORD PTR [rcx+208]
     movaps xmm14,XMMWORD PTR [rcx+224]
     movaps xmm15,XMMWORD PTR [rcx+240]
-    mov    rax,QWORD PTR gs:[0]
+    mov    QWORD PTR gs:[0],rax
     mov    eax,edx // move arg2 to return
     test   eax,eax
     jne    a
@@ -141,5 +142,7 @@ a:  mov    QWORD PTR [rsp],r8
     movaps xmm15,XMMWORD PTR [rcx+240]
     mov    QWORD PTR gs:[0],rax
     mov    QWORD PTR [rsp],r8
+    xor    rax,rax # return 0
+    inc    rax # HACK: return 1
     ret
 #include "END.h"

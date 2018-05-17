@@ -104,10 +104,10 @@ static void memcpy_a16(uint64_t *to, uint64_t *from, size_t nb)
 
 static void NOINLINE save_stack(jl_ptls_t ptls, jl_task_t *lastt, jl_task_t **pt)
 {
-    char *frame_addr = (char*)jl_get_frame_addr();
+    char *frame_addr = (char*)((uintptr_t)jl_get_frame_addr() & ~15);
     char *stackbase = (char*)ptls->stackbase;
     assert(stackbase > frame_addr);
-    size_t nb = LLT_ALIGN(stackbase - frame_addr, 16);
+    size_t nb = stackbase - frame_addr;
     void *buf;
     if (lastt->bufsz < nb) {
         buf = (void*)jl_gc_alloc_buf(ptls, nb);
@@ -273,6 +273,7 @@ static void ctx_switch(jl_ptls_t ptls, jl_task_t **pt)
     lastt->world_age = ptls->world_age;
     ptls->pgcstack = t->gcstack;
     ptls->world_age = t->world_age;
+    t->gcstack = NULL;
 
     // DEPRECATED:
     // restore task's current module, looking at parent tasks

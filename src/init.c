@@ -61,23 +61,14 @@ void jl_init_stack_limits(int ismaster, void **stack_lo, void **stack_hi)
 {
 #ifdef _OS_WINDOWS_
     (void)ismaster;
-#  ifdef _COMPILER_MICROSOFT_
-#    ifdef _P64
-    void **tib = (void**)__readgsqword(0x30);
-#    else
-    void **tib = (void**)__readfsdword(0x18);
-#    endif
-#  else
-    void **tib;
-#    ifdef _P64
-    __asm__("movq %%gs:0x30, %0" : "=r" (tib) : : );
-#    else
-    __asm__("movl %%fs:0x18, %0" : "=r" (tib) : : );
-#    endif
-#  endif
     // https://en.wikipedia.org/wiki/Win32_Thread_Information_Block
-    *stack_hi = (void*)tib[1]; // Stack Base / Bottom of stack (high address)
-    *stack_lo = (void*)tib[2]; // Stack Limit / Ceiling of stack (low address)
+#ifdef _P64
+    *stack_hi = (void**)__readgsqword(0x08); // Stack Base / Bottom of stack (high address)
+    *stack_lo = (void**)__readgsqword(0x10); // Stack Limit / Ceiling of stack (low address)
+#else
+    *stack_hi = (void**)__readfsdword(0x04); // Stack Base / Bottom of stack (high address)
+    *stack_lo = (void**)__readfsdword(0x08); // Stack Limit / Ceiling of stack (low address)
+#endif
 #else
 #  ifdef JULIA_ENABLE_THREADING
     // Only use pthread_*_np functions to get stack address for non-master
