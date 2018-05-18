@@ -296,12 +296,6 @@ deprecate(Base, :DSP, 2)
 using .DSP
 export conv, conv2, deconv, filt, filt!, xcorr
 
-# PR #21709
-@deprecate cov(x::AbstractVector, corrected::Bool) cov(x, corrected=corrected)
-@deprecate cov(x::AbstractMatrix, vardim::Int, corrected::Bool) cov(x, dims=vardim, corrected=corrected)
-@deprecate cov(X::AbstractVector, Y::AbstractVector, corrected::Bool) cov(X, Y, corrected=corrected)
-@deprecate cov(X::AbstractVecOrMat, Y::AbstractVecOrMat, vardim::Int, corrected::Bool) cov(X, Y, dims=vardim, corrected=corrected)
-
 # PR #22325
 # TODO: when this replace is removed from deprecated.jl:
 # 1) rename the function replace_new from strings/util.jl to replace
@@ -1347,14 +1341,6 @@ export readandwrite
 @deprecate findmin(A::AbstractArray, dims)    findmin(A, dims=dims)
 
 @deprecate mean(A::AbstractArray, dims)                              mean(A, dims=dims)
-@deprecate varm(A::AbstractArray, m::AbstractArray, dims; kwargs...) varm(A, m; kwargs..., dims=dims)
-@deprecate var(A::AbstractArray, dims; kwargs...)                    var(A; kwargs..., dims=dims)
-@deprecate std(A::AbstractArray, dims; kwargs...)                    std(A; kwargs..., dims=dims)
-@deprecate cov(X::AbstractMatrix, dim::Int; kwargs...)               cov(X; kwargs..., dims=dim)
-@deprecate cov(x::AbstractVecOrMat, y::AbstractVecOrMat, dim::Int; kwargs...) cov(x, y; kwargs..., dims=dim)
-@deprecate cor(X::AbstractMatrix, dim::Int)                          cor(X, dims=dim)
-@deprecate cor(x::AbstractVecOrMat, y::AbstractVecOrMat, dim::Int)   cor(x, y, dims=dim)
-@deprecate median(A::AbstractArray, dims; kwargs...)                 median(A; kwargs..., dims=dims)
 
 @deprecate mapreducedim(f, op, A::AbstractArray, dims)     mapreduce(f, op, A, dims=dims)
 @deprecate mapreducedim(f, op, A::AbstractArray, dims, v0) mapreduce(f, op, v0, A, dims=dims)
@@ -1663,6 +1649,20 @@ end
 
 # when this is removed, `isbitstype(typeof(x))` can be replaced with `isbits(x)`
 @deprecate isbits(@nospecialize(t::Type)) isbitstype(t)
+
+# statistics to StatsBase (#27152)
+@deprecate_moved cor "StatsBase"
+@deprecate_moved cov "StatsBase"
+@deprecate_moved median "StatsBase"
+@deprecate_moved median! "StatsBase"
+@deprecate_moved middle "StatsBase"
+@deprecate_moved quantile "StatsBase"
+@deprecate_moved quantile! "StatsBase"
+@deprecate_moved std "StatsBase"
+@deprecate_moved stdm "StatsBase"
+@deprecate_moved var "StatsBase"
+@deprecate_moved varm "StatsBase"
+@deprecate_moved linreg "StatsBase"
 
 # Special string deprecation
 @deprecate start(s::AbstractString) firstindex(s)

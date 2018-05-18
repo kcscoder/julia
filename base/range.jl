@@ -854,8 +854,6 @@ function mean(r::AbstractRange{<:Real})
     (first(r) + last(r)) / 2
 end
 
-median(r::AbstractRange{<:Real}) = mean(r)
-
 function _in_range(x, r::AbstractRange)
     if step(r) == 0
         return !isempty(r) && first(r) == x

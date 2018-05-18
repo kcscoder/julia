@@ -633,19 +633,8 @@ export
     set_zero_subnormals,
 
 # statistics
-    cor,
-    cov,
     mean!,
     mean,
-    median!,
-    median,
-    middle,
-    quantile!,
-    quantile,
-    std,
-    stdm,
-    var,
-    varm,
 
 # iteration
     done,

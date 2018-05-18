@@ -104,7 +104,6 @@ export
     ldiv!,
     ldltfact!,
     ldltfact,
-    linreg,
     logabsdet,
     logdet,
     lowrankdowndate,

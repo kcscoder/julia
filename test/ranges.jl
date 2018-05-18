@@ -806,12 +806,10 @@ end
     @test length(map(identity, UInt64(1):UInt64(5))) == 5
     @test length(map(identity, UInt128(1):UInt128(5))) == 5
 end
-@testset "mean/median" begin
-    for f in (mean, median)
-        for n = 2:5
-            @test f(2:n) == f([2:n;])
-            @test f(2:0.1:n) ≈ f([2:0.1:n;])
-        end
+@testset "mean" begin
+    for n = 2:5
+        @test mean(2:n) == mean([2:n;])
+        @test mean(2:0.1:n) ≈ mean([2:0.1:n;])
     end
 end
 @testset "issue #8531" begin
