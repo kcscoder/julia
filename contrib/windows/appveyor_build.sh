@@ -204,6 +204,7 @@ if [ -n "$USEMSVC" ]; then
 else
   # Use BinaryBuilder
   echo 'USE_BINARYBUILDER_LLVM = 1' >> Make.user
+  echo 'BINARYBUILDER_LLVM_RELDBG = 1' >> Make.user
   echo 'override DEP_LIBS += llvm openlibm' >> Make.user
   make check-whitespace
   make VERBOSE=1 -C base version_git.jl.phony
